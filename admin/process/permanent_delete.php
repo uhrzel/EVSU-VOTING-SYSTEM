@@ -10,5 +10,3 @@
 	}
 
 	header('location: ../archived_votes.php');
-
-?>

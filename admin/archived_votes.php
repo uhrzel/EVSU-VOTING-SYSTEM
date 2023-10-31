@@ -172,12 +172,72 @@
                     }
                     ?>
                   </tbody>
+                  <div id="deleteConfirmationModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h4 class="modal-title">Confirmation</h4>
+                        </div>
+                        <div class="modal-body">
+                          <p>Are you sure you want to delete the selected items?</p>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                          <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+                  <script>
+                    $(document).ready(function() {
+                      // Display the modal when the "Delete Selection" button is clicked
+                      $('#deleteSelectionButton').click(function() {
+                        var selectedIds = $('input[type="checkbox"]:checked').map(function() {
+                          return $(this).val();
+                        }).get();
 
-                  <form method="post" action="process_selection.php"> <!-- Replace 'process_selection.php' with the actual processing script -->
+                        if (selectedIds.length > 0) {
+                          $('#deleteConfirmationModal').modal('show');
+                          // Set the selected row IDs in a data attribute of the modal
+                          $('#deleteConfirmationModal').data('selectedIds', selectedIds);
+                        } else {
+                          alert('Please select items to delete.');
+                        }
+                      });
+
+                      // Handle the "Delete" button click within the modal
+                      $('#confirmDelete').click(function() {
+                        var selectedIds = $('#deleteConfirmationModal').data('selectedIds');
+                        $.ajax({
+                          url: '../admin/process/delete_selection.php', // Replace with the actual URL for the delete operation
+                          method: 'POST',
+                          data: {
+                            selected_rows: selectedIds
+                          },
+                          success: function(response) {
+                            // Handle the response from the server, e.g., show a success message
+
+                            // Reload the archived_votes.php page
+                            location.reload();
+                          },
+                          error: function(error) {
+                            // Handle the error, e.g., show an error message
+                            alert('Error: ' + error);
+                          }
+                        });
+                        $('#deleteConfirmationModal').modal('hide');
+                      });
+                    });
+                  </script>
+
+
+
+                  <form id="deleteForm" method="post" action="../admin/process/delete_selection.php">
                     <table id="example1" class="table table-bordered">
-                      <!-- ... (the rest of your table code) ... -->
                     </table>
-                    <button type="submit" class="btn btn-danger">Delete Selection</button>
+                    <button id="deleteSelectionButton" type="button" class="btn btn-danger"><i class="fa fa-trash"> </i> Delete Selection</button>
                   </form>
 
                 </table>

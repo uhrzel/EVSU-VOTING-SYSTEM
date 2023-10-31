@@ -20,5 +20,3 @@ if($conn->query($sql)){
         echo "Error: " . $deleteSql . "<br>" . mysqli_error($conn);
      }
      header('location: ../votes.php');
-    
-    ?>
