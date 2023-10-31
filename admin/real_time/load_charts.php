@@ -1,6 +1,6 @@
 <?php
 
-$conn = new mysqli('localhost', 'root', 'arzelzolina10', 'evsuvotes');
+$conn = new mysqli('localhost', 'root', '', 'evsuvotes');
 
 $sql = "SELECT * FROM positions ORDER BY priority ASC";
 $query = $conn->query($sql);
