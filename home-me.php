@@ -1,6 +1,7 @@
 <?php include 'includes/check_ip.php'; ?>
 <?php include 'includes/session.php'; ?>
 <?php include 'includes/header.php'; ?>
+
 <body class="hold-transition skin-blue layout-top-nav">
     <div class="wrapper">
         <?php include 'includes/navbar.php'; ?>
@@ -88,7 +89,7 @@
     divMsgA.setAttributeNode(divMsgAClass);
     divMsg.appendChild(divMsgH3);
     divMsg.appendChild(divMsgA);
-    
+
     let config = new Config(function(res) {
         title.innerText = res.election_title;
         _initVotes(res);
@@ -96,11 +97,11 @@
 
     function _initVotes(config) {
         votes = new Votes(function(res) {
-            console.log('Config',config);
+            console.log('Config', config);
             let charts = document.getElementById('positions_charts');
             let Vcandidates = new Candidates(function(positions, obj) {
-                
-                
+
+
 
                 res.my_votes.forEach(v => {
                     v['position'] = obj.candidates.find(elem => elem.candidates_id == v.candidate_id);
@@ -122,34 +123,34 @@
                         console.log('Candids', getVotes);
                         posVote = posVote + getVotes.length;
                         votes.push(getVotes.length);
-                        candidates.push(candidate.firstname+' '+candidate.lastname);
+                        candidates.push(candidate.firstname + ' ' + candidate.lastname);
                     });
                     console.log('Position Votes', posVote);
                     charts.appendChild(chart);
                     const data = {
                         labels: candidates,
                         datasets: [{
-                                name: "Votes", type: "bar",
-                                values: votes
+                            name: "Votes",
+                            type: "bar",
+                            values: votes
+                        }],
+                        yMarkers: [{
+                            label: "Votes",
+                            value: (posVote + 13),
+                            options: {
+                                labelPos: 'left'
+                            } // default: 'right'
+                        }],
+                        yRegions: [{
+                            label: "Total Votes: " + posVote,
+                            start: 0,
+                            end: posVote,
+                            options: {
+                                labelPos: 'right'
                             }
-                        ],
-                        yMarkers: [
-                            {
-                                label: "Votes",
-                                value: (posVote+13),
-                                options: { labelPos: 'left' } // default: 'right'
-                            }
-                        ],
-                        yRegions: [
-                            {
-                                label: "Total Votes: "+posVote,
-                                start: 0,
-                                end: posVote,
-                                options: { labelPos: 'right' }
-                            }
-                        ],
+                        }],
                     }
-                    let line = new frappe.Chart(chart, {  // or a DOM element,
+                    let line = new frappe.Chart(chart, { // or a DOM element,
                         title: position.description,
                         data: data,
                         type: 'bar', // or 'bar', 'line', 'scatter', 'pie', 'percentage'
@@ -157,7 +158,7 @@
                         colors: ['#7cd6fd']
                     });
                 });
-                
+
             });
         }).fetchByVotersId({
             voters_id: config.login_id.voter,
@@ -171,7 +172,7 @@
                     finish_vote.innerText = 'Finished';
                     $('#preview').modal('show');
                 }
-                res.length > 0?content.appendChild(divMsg):_initCandidates(res, obj);
+                res.length > 0 ? content.appendChild(divMsg) : _initCandidates(res, obj);
             }
         });
     }
@@ -181,8 +182,8 @@
             console.log('Candidate', obj);
             let i = 0;
             let xyz = 0;
-            res.map((position,xxx) => {
-                i==0?obj.current_position=position:'';
+            res.map((position, xxx) => {
+                i == 0 ? obj.current_position = position : '';
                 let tablI = document.createElement('li');
                 let tabA = document.createElement('a');
 
@@ -190,7 +191,7 @@
                 let tablId = document.createAttribute('id');
                 let tabADataToggle = document.createAttribute('data-toggle');
                 let tabAHref = document.createAttribute('href');
-                
+
                 let Collapse = document.createElement('div');
                 let CollapseCardCardBody = document.createElement('div');
 
@@ -198,8 +199,8 @@
                 let CollapseId = document.createAttribute('id');
                 let CollapseCardCardBodyClass = document.createAttribute('class');
 
-                CollapseClass.value = i==0?'tab-pane active':'tab-pane fade';
-                CollapseId.value = 'position_tab_toggle_'+position.position_id;
+                CollapseClass.value = i == 0 ? 'tab-pane active' : 'tab-pane fade';
+                CollapseId.value = 'position_tab_toggle_' + position.position_id;
                 CollapseCardCardBodyClass.value = 'card card-body';
 
                 Collapse.setAttributeNode(CollapseClass);
@@ -208,14 +209,14 @@
 
                 Collapse.appendChild(CollapseCardCardBody);
 
-                tab_positions.push('active custom_tabs_'+position.position_id);
-                
-                tablId.value = 'active custom_tabs_'+position.position_id;
-                active_tab = i==0?'active custom_tabs_'+position.position_id:'';
-                tablIClass.value = i==0?'active custom_tabs_'+position.position_id:'';
+                tab_positions.push('active custom_tabs_' + position.position_id);
+
+                tablId.value = 'active custom_tabs_' + position.position_id;
+                active_tab = i == 0 ? 'active custom_tabs_' + position.position_id : '';
+                tablIClass.value = i == 0 ? 'active custom_tabs_' + position.position_id : '';
                 tabADataToggle.value = 'tab';
-                tabA.id = 'custom_tabs_'+position.position_id;
-                tabAHref.value = '#position_tab_toggle_'+position.position_id;
+                tabA.id = 'custom_tabs_' + position.position_id;
+                tabAHref.value = '#position_tab_toggle_' + position.position_id;
                 tabA.innerText = position.description;
 
                 tablI.onclick = function() {
@@ -256,13 +257,13 @@
                 boxTitleClass.value = 'box-title';
                 boxBodyClass.value = 'box-body';
                 boxFoot.className = 'box-footer';
-                boxFootPrev.className = i>0?'btn btn-primary btn-sm':'btn btn-primary btn-sm disabled';
-                boxFootPrev.disabled = i>0?'':'true';
+                boxFootPrev.className = i > 0 ? 'btn btn-primary btn-sm' : 'btn btn-primary btn-sm disabled';
+                boxFootPrev.disabled = i > 0 ? '' : 'true';
                 boxFootPrev.innerText = 'Previous';
                 boxFootPrev.style = 'width:100px; height: 50px';
                 console.log('Obj', obj);
-                boxFootNext.className = (i+1)<obj.positions.length?'btn btn-primary btn-sm pull-right':'btn btn-primary btn-sm disabled';
-                boxFootNext.disabled = (i+1)<obj.positions.length?'':'true';
+                boxFootNext.className = (i + 1) < obj.positions.length ? 'btn btn-primary btn-sm pull-right' : 'btn btn-primary btn-sm disabled';
+                boxFootNext.disabled = (i + 1) < obj.positions.length ? '' : 'true';
                 boxFootNext.innerText = 'Next';
                 boxFootSubmit.className = 'btn btn-success btn-sm pull-right';
                 boxFootSubmit.innerText = 'Submit'
@@ -270,13 +271,13 @@
                 boxFootSubmit.style = 'margin-left:5px; width: 100px; height: 50px';
                 boxTitleB.innerText = position.description;
                 boxFootPrev.onclick = function() {
-                    let prevTab = xxx>0?candidates.positions[xxx-1]:null;
+                    let prevTab = xxx > 0 ? candidates.positions[xxx - 1] : null;
                     NextPrevPosition(position, prevTab);
-                }  
+                }
                 boxFootNext.onclick = function() {
-                    let nextTab = (xxx)<candidates.positions.length?candidates.positions[xxx+1]:null;
+                    let nextTab = (xxx) < candidates.positions.length ? candidates.positions[xxx + 1] : null;
                     NextPrevPosition(position, nextTab);
-                }  
+                }
                 boxFootSubmit.onclick = function() {
                     submitVote();
                 }
@@ -293,7 +294,7 @@
                 box.appendChild(boxHead);
                 box.appendChild(boxBody);
                 boxFoot.appendChild(boxFootPrev);
-                boxFoot.appendChild((i+1)<obj.positions.length?boxFootNext:boxFootSubmit);
+                boxFoot.appendChild((i + 1) < obj.positions.length ? boxFootNext : boxFootSubmit);
                 box.appendChild(boxFoot);
                 col.appendChild(box);
                 row.appendChild(col);
@@ -339,7 +340,7 @@
                     let liInput = document.createElement('input');
                     let liButton = document.createElement('button');
                     let liImg = document.createElement('img');
-                    
+
                     let liInputType = document.createAttribute('type');
                     let liInputName = document.createAttribute('name');
                     let liInputId = document.createAttribute('id');
@@ -355,20 +356,20 @@
                     li.style.backgroundColor = 'lightgrey'; // Set background color to yellow
                     li.style.fontWeight = 'bold'; // Make text bold
                     li.style.border = '1px solid #000'; // Add a border
-                    li.style.padding = '10px'; 
-                    liInputType.value = candidate.max_vote > 1?'checkbox':'radio';
+                    li.style.padding = '10px';
+                    liInputType.value = candidate.max_vote > 1 ? 'checkbox' : 'radio';
                     liInputClass.value = ' flat-red larger-radio';
                     liInput.style.verticalAlign = 'middle';
                     liImgWidth.value = '100px';
-                    liImgHeight.value = '100px';    
+                    liImgHeight.value = '100px';
                     liImgClass.value = 'clist responsive-img';
-                    liInputClick.value = "selCandids("+candidate.candidates_id+", this)";
-                    liImgSrc.value = candidate.photo?'images/'+candidate.photo:'images/profile.jpg';
-                    liInputName.value = 'radio_name_'+position.id;
-                    liInputId.value = 'radio_name_'+position.id;
-                  //  liButtonClass.value = 'btn btn-primary btn-sm btn-flat clist platform';
-                  //  liButton.innerText = 'Platform';
-                  //  liButtonClick.value = "viewPlatform("+candidate.candidates_id+")";
+                    liInputClick.value = "selCandids(" + candidate.candidates_id + ", this)";
+                    liImgSrc.value = candidate.photo ? 'images/' + candidate.photo : 'images/profile.jpg';
+                    liInputName.value = 'radio_name_' + position.id;
+                    liInputId.value = 'radio_name_' + position.id;
+                    //  liButtonClass.value = 'btn btn-primary btn-sm btn-flat clist platform';
+                    //  liButton.innerText = 'Platform';
+                    //  liButtonClick.value = "viewPlatform("+candidate.candidates_id+")";
 
                     liInput.setAttributeNode(liInputType);
                     liInput.setAttributeNode(liInputClass);
@@ -381,13 +382,13 @@
                     liInput.setAttributeNode(liInputClick);
                     liButton.setAttributeNode(liButtonClass);
                     liButton.setAttributeNode(liButtonClick);
-                    
+
                     console.log(liInput);
                     li.appendChild(liInput);
-                  //  li.appendChild(liButton);
+                    //  li.appendChild(liButton);
                     li.appendChild(liImg);
-                    li.innerHTML = li.innerHTML + '<span class="cname clist responsive-text">'+candidate.firstname+' '+candidate.lastname+'</span>';
-                    
+                    li.innerHTML = li.innerHTML + '<span class="cname clist responsive-text">' + candidate.firstname + ' ' + candidate.lastname + '</span>';
+
                     ul.appendChild(li);
                     console.log('Input', liInput);
                 });
@@ -397,10 +398,10 @@
                 CollapseCardCardBody.appendChild(row);
 
                 tab_content.appendChild(Collapse);
-                i = i+1;
+                i = i + 1;
                 xyz = xyz + 1;
             });
-            
+
             console.log('Votes', obj);
         });
     }
@@ -409,53 +410,54 @@
         console.log('Position', position);
         candidates.current_position = position;
     }
-    
+
     function selCandids(candid_id, elem) {
-        
+
         if (candidates.current_position.max_vote == 1) {
             reSet(true);
         }
         let candid = candidates.selCandidate({
-            position:candidates.current_position,
-            candidate_id:candid_id
-        },
-        function(res, type) {
-            if (type == 'max') {
-                elem.checked = false;
-                alert(res);
-            }
-            else {
-                candidates.removeVoteCandidId({candidate_id:candid_id});
-            }
-            
-        });
+                position: candidates.current_position,
+                candidate_id: candid_id
+            },
+            function(res, type) {
+                if (type == 'max') {
+                    elem.checked = false;
+                    alert(res);
+                } else {
+                    candidates.removeVoteCandidId({
+                        candidate_id: candid_id
+                    });
+                }
+
+            });
     }
 
     function reSet(event = null) {
-        let radios = document.getElementsByName('radio_name_'+candidates.current_position.id);
+        let radios = document.getElementsByName('radio_name_' + candidates.current_position.id);
         if (event == null) {
             radios.forEach(element => {
                 element.checked = false;
             });
         }
-       
+
         candidates.removerVote(candidates.current_position);
     }
 
     function NextPrevPosition(position, next) {
         if (next != null) {
-            let curTab  = document.getElementById('custom_tabs_'+next.position_id);
+            let curTab = document.getElementById('custom_tabs_' + next.position_id);
             curTab.click();
             selPos(next);
         }
     }
 
     function submitVote(candids = null) {
-        
+
         let ul = document.getElementById('preview_list');
         ul.innerHTML = '';
-        let positions = candids==null?candidates.positions:candids.positions;
-        let myVotes = candids==null?candidates.selectedCandidates:candids.selectedCandidates;
+        let positions = candids == null ? candidates.positions : candids.positions;
+        let myVotes = candids == null ? candidates.selectedCandidates : candids.selectedCandidates;
 
         positions.forEach(element => {
             let li = document.createElement('li');
@@ -464,8 +466,8 @@
 
             let liUl = document.createElement('ul');
             let filter = myVotes.filter(elem => elem.position.position_id == element.position_id);
-            
-            console.log('Votes: '+filter.length,filter);
+
+            console.log('Votes: ' + filter.length, filter);
             if (filter.length > 0) {
                 filter.forEach(vote => {
                     console.log('Votes', vote);
@@ -474,72 +476,73 @@
 
                     let filterCandid = vote.position.candidates.find(elem => elem.candidates_id == vote.candidate_id);
                     console.log('Filterd ', filterCandid);
-                    liulli.innerText = filterCandid.firstname+' '+filterCandid.lastname;
+                    liulli.innerText = filterCandid.firstname + ' ' + filterCandid.lastname;
                     liUl.appendChild(liulli);
                 });
-            }
-            else {
+            } else {
                 let liulli = document.createElement('li');
                 liulli.className = 'list-group-item';
                 liulli.innerText = 'N/A';
                 liUl.appendChild(liulli);
             }
 
-            
+
             li.appendChild(liUl);
             ul.appendChild(li);
         });
-        
+
         console.log('Submit vote');
         if (candids != null) {
             finish_vote.disabled = false;
             finish_vote.innerText = 'Finish';
         }
-        candids==null?$('#preview').modal('show'):'';
+        candids == null ? $('#preview').modal('show') : '';
     }
-    
+
     function viewPlatform(candid_id) {
         let candidate = candidates.getCandidate(candid_id);
         let platform_banner = document.getElementById('platform_banner');
         if (candidate.platform.length > 0) {
             platform_banner.innerText = candidate.platform;
-        }
-        else {
+        } else {
             platform_banner.innerText = 'Candidate have no platform yet.';
         }
         $('#preview_platform').modal('show');
     }
-    
-    
+
+
 
     finish_vote.onclick = function() {
         votes.setVote({
-            voter_id: config.config.login_id,
-            data:candidates.selectedCandidates
-        },
-        function(res){
-            window.location = window.location;
-            console.log('Result', res);
-        });
+                voter_id: config.config.login_id,
+                data: candidates.selectedCandidates
+            },
+            function(res) {
+                window.location = window.location;
+                console.log('Result', res);
+            });
     }
 </script>
 <style>
-.larger-radio {
-    width: 18px; 
-    height: 18px;
-    vertical-align: middle; 
-}
-.responsive-text{
-    vertical-align: middle;
-    text-align: ;
-}
-@media (max-width: 768px) {
-    .responsive-img {
-        max-width: 50px;
-        height: 50px; 
+    .larger-radio {
+        width: 18px;
+        height: 18px;
+        vertical-align: middle;
     }
+
     .responsive-text {
-        font-size: 16px; 
+        vertical-align: middle;
+
     }
-}
+
+    @media (max-width: 768px) {
+        .responsive-img {
+            max-width: 50px;
+            height: 50px;
+        }
+
+        .responsive-text {
+            font-size: 16px;
+        }
+    }
 </style>

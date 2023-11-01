@@ -39,7 +39,7 @@
                   <option value="">Select a Voter</option>
                   <?php
                   // Replace with your database connection code
-                  $db = new mysqli("localhost", "root", "", "evsuvotes");
+                  $db = new mysqli("localhost", "root", "arzelzolina10", "evsuvotes");
 
                   if ($db->connect_error) {
                     die("Connection failed: " . $db->connect_error);

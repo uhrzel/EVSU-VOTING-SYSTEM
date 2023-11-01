@@ -179,19 +179,28 @@
         });
     }
 
-    function getPartyName(partyId) {
-        // Replace this with your actual code to fetch the party name from the 'party_lists' table
-        // You might want to use an API request or a database query.
-        // For this example, we'll use a sample data object.
-        const partyData = {
-            15: 'LABAN Partylist',
-            16: 'HELLO WORLD',
-            19: 'Example'
-            // Add more party IDs and names as needed
-        };
-
-        return partyData[partyId] || 'Unknown Party';
+    function getPartyName(partyId, callback) {
+        $.ajax({
+            type: 'POST',
+            url: 'fetch_party_name.php', // Create this PHP script
+            data: {
+                partyId: partyId
+            },
+            success: function(response) {
+                callback(response);
+            },
+            error: function(xhr, status, error) {
+                console.log('AJAX Error:');
+                console.log('Status: ' + status);
+                console.log('Error: ' + error);
+                console.log(xhr.responseText);
+                callback('Error occurred during the request.');
+            }
+        });
     }
+
+
+
 
 
     function _initCandidates(res, obj) {
@@ -385,80 +394,84 @@
 
                 candidateList.appendChild(ul);
                 position.candidates.forEach(candidate => {
-                    const partyName = getPartyName(candidate.party_id);
-                    const partyNameElement = document.createElement('p');
-                    let li = document.createElement('li');
-                    li.classList.add("li-vote");
-                    let liInput = document.createElement('input');
-                    let liButton = document.createElement('button');
-                    let liImg = document.createElement('img');
+                    getPartyName(candidate.party_id, function(partyName) {
+                        const partyNameElement = document.createElement('p');
 
-                    let liInputType = document.createAttribute('type');
-                    let liInputName = document.createAttribute('name');
-                    let liInputId = document.createAttribute('id');
-                    let liImgWidth = document.createAttribute('width');
-                    let liImgHeight = document.createAttribute('height');
-                    let liImgClass = document.createAttribute('class');
-                    let liImgSrc = document.createAttribute('src');
-                    let liInputClass = document.createAttribute('class');
-                    let liInputClick = document.createAttribute('onclick');
-                    let liButtonClass = document.createAttribute('class');
-                    let liButtonClick = document.createAttribute('onclick');
+                        let li = document.createElement('li');
+                        li.classList.add("li-vote");
+                        let liInput = document.createElement('input');
+                        let liButton = document.createElement('button');
+                        let liImg = document.createElement('img');
 
-                    li.style.backgroundColor = 'lightgrey'; // Set background color to yellow
-                    li.style.border = '1px solid #000'; // Add a border
-                    li.style.padding = '10px';
-                    liInputType.value = candidate.max_vote > 1 ? 'checkbox' : 'radio';
-                    liInputClass.value = 'flat-red larger-radio';
-                    liImgWidth.value = '100px';
-                    liImgHeight.value = '100px';
-                    liImgClass.value = 'clist responsive-img';
-                    liInputClick.value = "selCandids(" + candidate.candidates_id + ", this)";
-                    liImgSrc.value = candidate.photo ? 'images/' + candidate.photo : 'images/profile.jpg';
-                    liInputName.value = 'radio_name_' + position.id;
-                    liInputId.value = 'radio_name_' + position.id;
-                    //  liButtonClass.value = 'btn btn-primary btn-sm btn-flat clist platform';
-                    //  liButton.innerText = 'Platform';
-                    //  liButtonClick.value = "viewPlatform("+candidate.candidates_id+")";
+                        let liInputType = document.createAttribute('type');
+                        let liInputName = document.createAttribute('name');
+                        let liInputId = document.createAttribute('id');
+                        let liImgWidth = document.createAttribute('width');
+                        let liImgHeight = document.createAttribute('height');
+                        let liImgClass = document.createAttribute('class');
+                        let liImgSrc = document.createAttribute('src');
+                        let liInputClass = document.createAttribute('class');
+                        let liInputClick = document.createAttribute('onclick');
+                        let liButtonClass = document.createAttribute('class');
+                        let liButtonClick = document.createAttribute('onclick');
 
-                    liInput.setAttributeNode(liInputType);
-                    liInput.setAttributeNode(liInputClass);
-                    liImg.setAttributeNode(liImgWidth);
-                    liImg.setAttributeNode(liImgHeight);
-                    liImg.setAttributeNode(liImgClass);
-                    liImg.setAttributeNode(liImgSrc);
-                    liInput.setAttributeNode(liInputName);
-                    liInput.setAttributeNode(liInputId);
-                    liInput.setAttributeNode(liInputClick);
-                    liButton.setAttributeNode(liButtonClass);
-                    liButton.setAttributeNode(liButtonClick);
+                        li.style.backgroundColor = 'lightgrey'; // Set background color to yellow
+                        li.style.border = '1px solid #000'; // Add a border
+                        li.style.padding = '10px';
+                        liInputType.value = candidate.max_vote > 1 ? 'checkbox' : 'radio';
+                        liInputClass.value = 'flat-red larger-radio';
+                        liImgWidth.value = '100px';
+                        liImgHeight.value = '100px';
+                        liImgClass.value = 'clist responsive-img';
+                        liInputClick.value = "selCandids(" + candidate.candidates_id + ", this)";
+                        liImgSrc.value = candidate.photo ? 'images/' + candidate.photo : 'images/profile.jpg';
+                        liInputName.value = 'radio_name_' + position.id;
+                        liInputId.value = 'radio_name_' + position.id;
+                        //  liButtonClass.value = 'btn btn-primary btn-sm btn-flat clist platform';
+                        //  liButton.innerText = 'Platform';
+                        //  liButtonClick.value = "viewPlatform("+candidate.candidates_id+")";
 
-                    console.log(liInput);
-                    //  li.appendChild(liButton);
-                    li.appendChild(liInput);
-                    li.appendChild(liImg);
-                    li.innerHTML = li.innerHTML + `
+                        liInput.setAttributeNode(liInputType);
+                        liInput.setAttributeNode(liInputClass);
+                        liImg.setAttributeNode(liImgWidth);
+                        liImg.setAttributeNode(liImgHeight);
+                        liImg.setAttributeNode(liImgClass);
+                        liImg.setAttributeNode(liImgSrc);
+                        liInput.setAttributeNode(liInputName);
+                        liInput.setAttributeNode(liInputId);
+                        liInput.setAttributeNode(liInputClick);
+                        liButton.setAttributeNode(liButtonClass);
+                        liButton.setAttributeNode(liButtonClick);
+
+                        console.log(liInput);
+                        //  li.appendChild(liButton);
+                        li.appendChild(liInput);
+                        li.appendChild(liImg);
+                        li.innerHTML = li.innerHTML + `
                     <div class="name-container"> 
                         <h2 class="cname clist responsive-text"> ${candidate.firstname} ${candidate.lastname} </h2>
                         <p> ${partyName} </p>
                     </div>
                     `;
-                    ul.appendChild(li);
-                    console.log('Input', liInput);
-                });
-                boxBody.appendChild(candidateList);
-                //End List
-                // End
-                CollapseCardCardBody.appendChild(row);
+                        ul.appendChild(li);
+                        console.log('Input', liInput);
+                    });
 
-                tab_content.appendChild(Collapse);
-                i = i + 1;
-                xyz = xyz + 1;
+                    boxBody.appendChild(candidateList);
+                    //End List
+                    // End
+                    CollapseCardCardBody.appendChild(row);
+
+                    tab_content.appendChild(Collapse);
+                    i = i + 1;
+                    xyz = xyz + 1;
+                });
+
+                console.log('Votes', obj);
             });
 
-            console.log('Votes', obj);
-        });
-    }
+        })
+    };
 
     function selPos(position) {
         console.log('Position', position);
@@ -587,7 +600,7 @@
         font-family: 'Poppins', sans-serif;
         font-weight: bold;
         vertical-align: middle;
-        text-align: ;
+
     }
 
     .refresh-btn {
